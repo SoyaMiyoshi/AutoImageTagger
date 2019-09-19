@@ -5,11 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import com.example.demo.domein.Todo;
+import com.example.demo.domein.User;
 
 @Repository
-public interface TodoRepository extends JpaRepository<Todo, Long> {   
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<Todo> findTodosByName(String name);
+    List<User> findUsersByUsername(String username);
 
 }
