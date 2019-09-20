@@ -1,7 +1,13 @@
 package com.example.demo.controller;
 
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,15 +19,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import javax.servlet.http.HttpServletRequest;
 
 
 import com.example.demo.domein.Todo;
 import com.example.demo.repository.TodoRepository;
 import com.example.demo.service.TodoService;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("")
 public class TodoController {
+
+    private String CLIENT_ID = "23665ab2523ccb26f74b";
+    private String CLIENT_SECRET = "533f22821efc30b22ae014c8830640bbd68d8d38";
+
     @Autowired
     private TodoService todoService;
 
@@ -29,8 +44,49 @@ public class TodoController {
     TodoRepository todoRepository;
 
     @GetMapping("/")
-    public String home(Model model) {
-        return "todos/home";
+    public RedirectView home() {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
+        return redirectView;
+    }
+
+    @GetMapping("/callback0")
+    public String home0(HttpServletRequest request) throws MalformedURLException,
+            ProtocolException, IOException {
+        String code = request.getParameter("code");
+        System.out.println(code);
+
+        String url = "https://github.com/login/oauth/access_token";
+        URL myurl = new URL(url);
+
+        Map<String,Object> params = new LinkedHashMap<>();
+        params.put("code", code);
+        params.put("client_id", CLIENT_ID);
+        params.put("client_secret", CLIENT_SECRET);
+
+        StringBuilder postData = new StringBuilder();
+        for (Map.Entry<String,Object> param : params.entrySet()) {
+            if (postData.length() != 0) postData.append('&');
+            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+            postData.append('=');
+            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+        }
+        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+
+        HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+        conn.setDoOutput(true);
+        conn.getOutputStream().write(postDataBytes);
+
+        Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+
+        for (int c; (c = in.read()) >= 0;)
+            System.out.print((char)c);
+
+        System.out.println(conn.getResponseCode());
+        return "/todos/home";
     }
 
     @GetMapping("/todos")
