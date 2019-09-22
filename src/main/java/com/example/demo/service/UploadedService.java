@@ -30,7 +30,7 @@ public class UploadedService {
     }
 
     public List<Uploaded> finduploadeds(String query) {
-        return uploadedRepository.findUploadedByName("%" + query + "%");
+        return uploadedRepository.findUploadedByOwner("%" + query + "%");
     }
 
 }

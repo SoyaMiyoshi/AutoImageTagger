@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import com.example.demo.repository.UploadedRepository;
 import com.example.demo.service.UploadedService;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
@@ -34,6 +38,7 @@ public class UploadedController {
 
     private String CLIENT_ID = "23665ab2523ccb26f74b";
     private String CLIENT_SECRET = "533f22821efc30b22ae014c8830640bbd68d8d38";
+    private String STORAGE_PATH = "/Users/sou/IdeaProjects/mytodoapp/src/main/resources/saved/";
     private String login;
 
     public String myApiCall ( Map<String,Object> params,  String url, String method) throws IOException {
@@ -70,6 +75,7 @@ public class UploadedController {
 
     @GetMapping("/")
     public RedirectView home() {
+
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
         return redirectView;
@@ -91,12 +97,27 @@ public class UploadedController {
 
         String res = myApiCall(params2, "https://api.github.com/user?access_token=" + token, "GET" );
         login = res.split(",", 2)[0].split(":", 2)[1].replace("\"", "");
-        String id = res.split(",", 3)[1].split(":", 2)[1];
         System.out.println(login);
 
-        return "/uploadeds/home";
+        return "/uploadeds/uploadnew";
     }
 
+    @PostMapping("/uploadnew")
+    public String handleFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
+
+        if (!file.isEmpty() && login != null && !login.isEmpty()) {
+            Uploaded uploaded = new Uploaded();
+            uploaded.setOwner(login);
+            uploadedService.save(uploaded);
+            BufferedImage src = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
+            File destination = new File( STORAGE_PATH + uploaded.getId().toString() + ".jpg");
+            ImageIO.write(src, "jpg", destination);
+        }
+
+        return "uploadeds/uploadnew";
+    }
+
+    /*
     @GetMapping("/uploadeds")
     public String index(Model model) {
         List<Uploaded> uploadeds = uploadedService.findAll();
@@ -161,6 +182,6 @@ public class UploadedController {
     public String destroy(@PathVariable Long id) {
         uploadedService.delete(id);
         return "redirect:/uploadeds";
-    }
-    
+    }*/
+
 }

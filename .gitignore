@@ -5,6 +5,7 @@ build/
 !**/src/main/**
 !**/src/test/**
 .DS_Store
+/Users/sou/IdeaProjects/mytodoapp/src/main/resources/saved/*
 
 ### STS ###
 .apt_generated
