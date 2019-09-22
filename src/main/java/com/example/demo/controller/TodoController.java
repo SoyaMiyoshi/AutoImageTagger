@@ -28,6 +28,7 @@ import com.example.demo.service.TodoService;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -36,6 +37,32 @@ public class TodoController {
 
     private String CLIENT_ID = "23665ab2523ccb26f74b";
     private String CLIENT_SECRET = "533f22821efc30b22ae014c8830640bbd68d8d38";
+
+    public String myApiCall ( Map<String,Object> params,  String url, String method) throws IOException {
+
+        URL myurl = new URL(url);
+        HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
+        conn.setRequestMethod(method);
+
+        if (method.equals("POST")) {
+            StringBuilder postData = new StringBuilder();
+            for (Map.Entry<String,Object> param : params.entrySet()) {
+                if (postData.length() != 0) postData.append('&');
+                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+            }
+
+            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+            conn.setDoOutput(true);
+            conn.getOutputStream().write(postDataBytes);
+        }
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+        return(in.lines().collect(Collectors.joining()));
+    }
 
     @Autowired
     private TodoService todoService;
@@ -51,41 +78,23 @@ public class TodoController {
     }
 
     @GetMapping("/callback0")
-    public String home0(HttpServletRequest request) throws MalformedURLException,
-            ProtocolException, IOException {
+    public String home0(HttpServletRequest request) throws IOException {
         String code = request.getParameter("code");
-        System.out.println(code);
 
         String url = "https://github.com/login/oauth/access_token";
-        URL myurl = new URL(url);
 
         Map<String,Object> params = new LinkedHashMap<>();
         params.put("code", code);
         params.put("client_id", CLIENT_ID);
         params.put("client_secret", CLIENT_SECRET);
 
-        StringBuilder postData = new StringBuilder();
-        for (Map.Entry<String,Object> param : params.entrySet()) {
-            if (postData.length() != 0) postData.append('&');
-            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-            postData.append('=');
-            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-        }
-        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+        String token = myApiCall(params, url, "POST").split("&", 2)[0].split("=", 2)[1];
+        Map<String,Object> params2 = new LinkedHashMap<>();
 
-        HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-        conn.setDoOutput(true);
-        conn.getOutputStream().write(postDataBytes);
-
-        Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-
-        for (int c; (c = in.read()) >= 0;)
-            System.out.print((char)c);
-
-        System.out.println(conn.getResponseCode());
+        String res = myApiCall(params2, "https://api.github.com/user?access_token=" + token, "GET" );
+        String login = res.split(",", 2)[0].split(":", 2)[1].replace("\"", "");
+        String id = res.split(",", 3)[1].split(":", 2)[1];
+    
         return "/todos/home";
     }
 
