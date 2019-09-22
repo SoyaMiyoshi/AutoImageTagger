@@ -12,11 +12,12 @@ public class Todo {
     private Long id;
     private String name;
     private String deadline;
-    public String isDone;
+    public String isdone;
+    public String owner;
 
     
     public Todo (){
-        isDone = "No";
+        isdone = "No";
     }
 
     public Long getId() {
@@ -40,16 +41,24 @@ public class Todo {
     }
 
     public String getDone() {
-        return isDone;
+        return isdone;
     }
 
     public void setDone(){
-        this.isDone = "Yes";
+        this.isdone = "Yes";
     }
 
+    public String getOwner() {
+        return owner;
+    }
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    /*
     @Override
     public String toString() {
-        return "Todo [id=" + id + ", name=" + name + ", deadline=" + deadline + ", isDone=" + isDone + "]";
-    }
+        return "Todo [id=" + id + ", name=" + name + ", deadline=" + deadline + ", isDone=" + isdone + "]";
+    }*/
 }
 

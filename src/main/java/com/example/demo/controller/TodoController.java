@@ -2,12 +2,10 @@ package com.example.demo.controller;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
-
 
 import com.example.demo.domein.Todo;
 import com.example.demo.repository.TodoRepository;
@@ -37,6 +34,7 @@ public class TodoController {
 
     private String CLIENT_ID = "23665ab2523ccb26f74b";
     private String CLIENT_SECRET = "533f22821efc30b22ae014c8830640bbd68d8d38";
+    private String login;
 
     public String myApiCall ( Map<String,Object> params,  String url, String method) throws IOException {
 
@@ -92,9 +90,10 @@ public class TodoController {
         Map<String,Object> params2 = new LinkedHashMap<>();
 
         String res = myApiCall(params2, "https://api.github.com/user?access_token=" + token, "GET" );
-        String login = res.split(",", 2)[0].split(":", 2)[1].replace("\"", "");
+        login = res.split(",", 2)[0].split(":", 2)[1].replace("\"", "");
         String id = res.split(",", 3)[1].split(":", 2)[1];
-    
+        System.out.println(login);
+
         return "/todos/home";
     }
 
@@ -137,7 +136,8 @@ public class TodoController {
     }
 
     @PostMapping("/todos/new")
-    public String create(@ModelAttribute Todo todo) { 
+    public String create(@ModelAttribute Todo todo) {
+        todo.setOwner(login);
         todoService.save(todo);
         return "redirect:/todos"; 
     }
