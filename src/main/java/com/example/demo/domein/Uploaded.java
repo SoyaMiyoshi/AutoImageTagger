@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity 
-public class Todo {
+public class Uploaded {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,7 +16,7 @@ public class Todo {
     public String owner;
 
     
-    public Todo (){
+    public Uploaded(){
         isdone = "No";
     }
 
@@ -58,7 +58,7 @@ public class Todo {
     /*
     @Override
     public String toString() {
-        return "Todo [id=" + id + ", name=" + name + ", deadline=" + deadline + ", isDone=" + isdone + "]";
+        return "uploaded [id=" + id + ", name=" + name + ", deadline=" + deadline + ", isDone=" + isdone + "]";
     }*/
 }
 

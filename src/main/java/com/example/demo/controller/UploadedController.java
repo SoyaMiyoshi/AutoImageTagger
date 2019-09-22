@@ -6,6 +6,7 @@ import java.net.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.example.demo.domein.Uploaded;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 
-import com.example.demo.domein.Todo;
-import com.example.demo.repository.TodoRepository;
-import com.example.demo.service.TodoService;
+import com.example.demo.repository.UploadedRepository;
+import com.example.demo.service.UploadedService;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("")
-public class TodoController {
+public class UploadedController {
 
     private String CLIENT_ID = "23665ab2523ccb26f74b";
     private String CLIENT_SECRET = "533f22821efc30b22ae014c8830640bbd68d8d38";
@@ -63,10 +63,10 @@ public class TodoController {
     }
 
     @Autowired
-    private TodoService todoService;
+    private UploadedService uploadedService;
 
     @Autowired
-    TodoRepository todoRepository;
+    UploadedRepository uploadedRepository;
 
     @GetMapping("/")
     public RedirectView home() {
@@ -94,73 +94,73 @@ public class TodoController {
         String id = res.split(",", 3)[1].split(":", 2)[1];
         System.out.println(login);
 
-        return "/todos/home";
+        return "/uploadeds/home";
     }
 
-    @GetMapping("/todos")
+    @GetMapping("/uploadeds")
     public String index(Model model) {
-        List<Todo> todos = todoService.findAll();
-        model.addAttribute("todos", todos); 
-        return "todos/index"; 
+        List<Uploaded> uploadeds = uploadedService.findAll();
+        model.addAttribute("uploadeds", uploadeds);
+        return "uploadeds/index";
     }
 
-    @GetMapping("/todos/search")
+    @GetMapping("/uploadeds/search")
     public String search_and_see_screen(Model model) {
-      return "todos/search_and_see";
+      return "uploadeds/search_and_see";
     }
 
-    @PostMapping("/todos/search")
+    @PostMapping("/uploadeds/search")
     public String search(Model model, @RequestParam String query) {
-      List<Todo> todos = todoRepository.findTodosByName(query);
-      model.addAttribute("todos", todos); 
-      return "todos/search_and_see";
+      List<Uploaded> uploadeds = uploadedRepository.findUploadedByName(query);
+      model.addAttribute("uploadeds", uploadeds);
+      return "uploadeds/search_and_see";
     }
 
-    @GetMapping("/todos/new")
-    public String newTodo(Model model) {
-        return "todos/new";
+    @GetMapping("/uploadeds/new")
+    public String newuploaded(Model model) {
+        return "uploadeds/new";
     }
 
-    @GetMapping("/todos/{id}/edit")
+    @GetMapping("/uploadeds/{id}/edit")
     public String edit(@PathVariable Long id, Model model) { 
-        Todo todo = todoService.findOne(id);
-        model.addAttribute("todo", todo);
-        return "todos/edit";
+        Uploaded uploaded = uploadedService.findOne(id);
+        model.addAttribute("uploaded", uploaded);
+        return "uploadeds/edit";
     }
 
-    @GetMapping("/todos/{id}")
+    @GetMapping("/uploadeds/{id}")
     public String show(@PathVariable Long id, Model model) {
-        Todo todo = todoService.findOne(id);
-        model.addAttribute("todo", todo);
-        return "todos/show";
+        Uploaded uploaded = uploadedService.findOne(id);
+        model.addAttribute("uploaded", uploaded);
+        return "uploadeds/show";
     }
 
-    @PostMapping("/todos/new")
-    public String create(@ModelAttribute Todo todo) {
-        todo.setOwner(login);
-        todoService.save(todo);
-        return "redirect:/todos"; 
+    @PostMapping("/uploadeds/new")
+    public String create(@ModelAttribute Uploaded uploaded) {
+        uploaded.setOwner(login);
+        uploadedService.save(uploaded);
+        return "redirect:/uploadeds";
     }
 
-    @PostMapping("/todos/{id}")
+    @PostMapping("/uploadeds/{id}")
     public String done(@PathVariable Long id) {
-        Todo todo = todoService.findOne(id);
-        todo.setDone();
-        todoService.save(todo);
-        return "redirect:/todos";
+        Uploaded uploaded = uploadedService.findOne(id);
+        uploaded.setDone();
+        uploadedService.save(uploaded);
+        return "redirect:/uploadeds";
     }
 
-    @PutMapping("/todos/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute Todo todo) {
-        todo.setId(id);
-        todoService.save(todo);
-        return "redirect:/todos";
+    @PutMapping("/uploadeds/{id}")
+    public String update(@PathVariable Long id, @ModelAttribute Uploaded uploaded) {
+        uploaded.setId(id);
+        uploadedService.save(uploaded);
+        return "redirect:/uploadeds";
     }
 
-    @DeleteMapping("/todos/{id}")
+    @DeleteMapping("/uploadeds/{id}")
     public String destroy(@PathVariable Long id) {
-        todoService.delete(id);
-        return "redirect:/todos";
+        uploadedService.delete(id);
+        return "redirect:/uploadeds";
     }
     
 }

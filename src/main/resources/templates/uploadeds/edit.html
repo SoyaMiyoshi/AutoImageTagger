@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
-    <title>Editing Todo</title>
+    <title>Editing uploaded</title>
     <link rel="stylesheet" href="/css/bootstrap.css" />
     <script src="/js/jquery.js"></script>
     <script src="/js/bootstrap.js"></script>
@@ -9,15 +9,15 @@
 </html><html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
-    <title>Editing Todo - baseball</title>
+    <title>Editing uploaded - baseball</title>
     <link rel="stylesheet" href="/css/bootstrap.css" />
     <script src="/js/jquery.js"></script>
     <script src="/js/bootstrap.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>Editing Todo</h1>
-    <form th:action="@{/todos/{id}(id=*{id})}" th:method="put" th:object="${todo}">
+    <h1>Editing uploaded</h1>
+    <form th:action="@{/uploadeds/{id}(id=*{id})}" th:method="put" th:object="${uploaded}">
         <div class="form-group">
             <label class="control-label">名前</label>
             <input class="form-control" type="text" th:field="*{name}" />
@@ -29,7 +29,7 @@
         <button class="btn btn-default" type="submit">更新</button>
     </form>
     <div class="pull-right">
-        <a class="btn btn-link" href="/todos">一覧画面へ</a>
+        <a class="btn btn-link" href="/uploadeds">一覧画面へ</a>
     </div>
 </div>
 </body>
