@@ -30,33 +30,20 @@
         <thead>
         <tr>
             <th>名前</th>
-            <th>期限</th>
-            <th>完了?</th>
-            <th></th>
-            <th></th>
-            <th></th>
             <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="uploaded:${uploadeds}" th:object="${uploaded}">
-            <td th:text="*{name}"></td>
-            <td th:text="*{deadline}"></td>
-            <td th:text="*{isDone}"></td>
-
-            <td><a class="btn btn-default btn-xs" th:href="@{/uploadeds/{id}(id=*{id})}">参照</a></td>
-            <td><a class="btn btn-default btn-xs" th:href="@{/uploadeds/{id}/edit(id=*{id})}">編集</a></td>
-            <td>
-                <form th:action="@{/uploadeds/{id}(id=*{id})}" th:method="delete">
-                    <input class="btn btn-default btn-xs" type="submit" value="削除" />
-                </form>
-            </td>
-            <td>
-                <form th:action="@{/uploadeds/{id}(id=*{id})}" th:method="post">
-                    <input class="btn btn-default btn-xs" type="submit" value="完了した!" />
-                </form>
-            </td>
-        </tr>
+            <td th:text="*{owner}"></td>
+            <td id="image_id" th:text="*{id}"></td>
+            <img id="image_place" sizes="614px">
+            <script type="text/javascript">
+                var img = document.getElementById("image_place");
+                var imageId = document.getElementById("image_id").innerText;
+                img.src = "/Users/sou/IdeaProjects/mytodoapp/src/main/resources/saved/" + imageId + ".jpg";
+            </script>
+                </tr>
         </tbody>
     </table>
 </div>

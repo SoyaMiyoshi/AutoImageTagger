@@ -140,6 +140,20 @@ public class UploadedController {
         return "uploadeds/uploadnew";
     }
 
+    @PostMapping("/uploadeds/search")
+    public String search(Model model, @RequestParam String query) {
+        List<Uploaded> uploadeds = uploadedRepository.findUploadedByOwner(query);
+        model.addAttribute("uploadeds", uploadeds);
+        return "uploadeds/search_and_see";
+    }
+
+    @GetMapping("/uploadeds/all")
+    public String index(Model model) {
+        List<Uploaded> uploadeds = uploadedService.findAll();
+        model.addAttribute("uploadeds", uploadeds);
+        return "uploadeds/search_and_see";
+    }
+
     /*
     @GetMapping("/uploadeds")
     public String index(Model model) {
