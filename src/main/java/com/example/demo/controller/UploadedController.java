@@ -2,8 +2,10 @@ package com.example.demo.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -73,12 +75,33 @@ public class UploadedController {
     @Autowired
     UploadedRepository uploadedRepository;
 
+    /*
     @GetMapping("/")
     public RedirectView home() {
 
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
         return redirectView;
+    }*/
+
+    @GetMapping("/")
+    public String home() throws IOException {
+
+        String[] commands = new String[]{ "ls", "pwd" };
+
+        for (String command : commands) {
+            ProcessBuilder builder = new ProcessBuilder(command);
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+            InputStream is = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        }
+        return "/uploadeds/uploadnew";
     }
 
     @GetMapping("/callback0")
