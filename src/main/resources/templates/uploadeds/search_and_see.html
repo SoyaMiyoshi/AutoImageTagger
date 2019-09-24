@@ -35,15 +35,19 @@
         </thead>
         <tbody>
         <tr th:each="uploaded:${uploadeds}" th:object="${uploaded}">
-            <td th:text="*{owner}"></td>
             <td id="image_id" th:text="*{id}"></td>
-            <img id="image_place" sizes="614px">
-            <script type="text/javascript">
-                var img = document.getElementById("image_place");
-                var imageId = document.getElementById("image_id").innerText;
-                img.src = "/Users/sou/IdeaProjects/mytodoapp/src/main/resources/saved/" + imageId + ".jpg";
-            </script>
-                </tr>
+                <script type="text/javascript">
+                    var imageId = document.getElementById("image_id").innerText;
+                    var mysrc = "../saved/" + imageId + ".jpg";
+                    var content = '<img src="' + mysrc + '" width="104" height="91" />'
+                    document.write(content);
+                    /*
+                    var img = document.getElementById("image_place");
+                    var imageId = document.getElementById("image_id").innerText;
+                    img.src = "/Users/sou/IdeaProjects/mytodoapp/src/main/resources/saved/" + imageId + ".jpg";
+                    */
+                </script>
+        </tr>
         </tbody>
     </table>
 </div>
