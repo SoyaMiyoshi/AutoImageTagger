@@ -2,23 +2,15 @@ package com.example.demo.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import com.example.demo.domein.Uploaded;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,18 +24,46 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Properties;
 
 
 @Controller
 @RequestMapping("")
 public class UploadedController {
 
-    private String CLIENT_ID = "23665ab2523ccb26f74b";
-    private String CLIENT_SECRET = "533f22821efc30b22ae014c8830640bbd68d8d38";
-    private String STORAGE_PATH = "/Users/sou/IdeaProjects/mytodoapp/src/main/resources/saved/";
+
+    private String CLIENT_ID = "";
+    private String CLIENT_SECRET = "";
+    private String STORAGE_PATH = "src/main/resources/saved/";
     private String login;
 
-    public String myApiCall ( Map<String,Object> params,  String url, String method) throws IOException {
+    @Autowired
+    private UploadedService uploadedService;
+
+    @Autowired
+    UploadedRepository uploadedRepository;
+
+
+    public void myInit () {
+        try {
+            InputStream input = new FileInputStream("src/main/resources/application.properties");
+            Properties prop = new Properties();
+
+            // load a properties file
+            prop.load(input);
+
+            // get the property value and print it out
+            this.CLIENT_ID = prop.getProperty("github.clientid");
+            this.CLIENT_SECRET = prop.getProperty("github.clientsecret");
+            System.out.println(prop.getProperty("github.clientsecret"));
+
+        } catch (IOException ex) {
+            System.out.println("Could n toread prperties file!");
+        }
+
+    }
+
+    public String myGitHubApiCall ( Map<String,Object> params,  String url, String method) throws IOException {
 
         URL myurl = new URL(url);
         HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
@@ -69,39 +89,18 @@ public class UploadedController {
         return(in.lines().collect(Collectors.joining()));
     }
 
-    @Autowired
-    private UploadedService uploadedService;
+    public void myAutoTaggerCall (String image_id) throws IOException{
+        String virtual_python = "src/main/resources/tagger/venv/bin/python3";
+        String python_ex = "src/main/resources/tagger/mytagger.py";
+        Runtime.getRuntime().exec(virtual_python + " " + python_ex + " " + image_id + " &");
+    }
 
-    @Autowired
-    UploadedRepository uploadedRepository;
-
-    /*
     @GetMapping("/")
     public RedirectView home() {
-
+        myInit();
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
         return redirectView;
-    }*/
-
-    @GetMapping("/")
-    public String home() throws IOException {
-
-        String[] commands = new String[]{ "ls", "pwd" };
-
-        for (String command : commands) {
-            ProcessBuilder builder = new ProcessBuilder(command);
-            builder.redirectErrorStream(true);
-            Process process = builder.start();
-            InputStream is = process.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        }
-        return "/uploadeds/uploadnew";
     }
 
     @GetMapping("/callback0")
@@ -111,14 +110,15 @@ public class UploadedController {
         String url = "https://github.com/login/oauth/access_token";
 
         Map<String,Object> params = new LinkedHashMap<>();
+
         params.put("code", code);
         params.put("client_id", CLIENT_ID);
         params.put("client_secret", CLIENT_SECRET);
 
-        String token = myApiCall(params, url, "POST").split("&", 2)[0].split("=", 2)[1];
+        String token = myGitHubApiCall(params, url, "POST").split("&", 2)[0].split("=", 2)[1];
         Map<String,Object> params2 = new LinkedHashMap<>();
 
-        String res = myApiCall(params2, "https://api.github.com/user?access_token=" + token, "GET" );
+        String res = myGitHubApiCall(params2, "https://api.github.com/user?access_token=" + token, "GET" );
         login = res.split(",", 2)[0].split(":", 2)[1].replace("\"", "");
         System.out.println(login);
 
@@ -135,8 +135,8 @@ public class UploadedController {
             BufferedImage src = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
             File destination = new File( STORAGE_PATH + uploaded.getId().toString() + ".jpg");
             ImageIO.write(src, "jpg", destination);
+            myAutoTaggerCall(uploaded.getId().toString());
         }
-
         return "uploadeds/uploadnew";
     }
 
