@@ -31,7 +31,6 @@ import java.util.Properties;
 @RequestMapping("")
 public class UploadedController {
 
-
     private String CLIENT_ID = "";
     private String CLIENT_SECRET = "";
     private String STORAGE_PATH = "src/main/resources/saved/";
@@ -43,7 +42,6 @@ public class UploadedController {
     @Autowired
     UploadedRepository uploadedRepository;
 
-
     public void myInit () {
         try {
             InputStream input = new FileInputStream("src/main/resources/application.properties");
@@ -53,8 +51,8 @@ public class UploadedController {
             prop.load(input);
 
             // get the property value and print it out
-            this.CLIENT_ID = prop.getProperty("github.clientid");
-            this.CLIENT_SECRET = prop.getProperty("github.clientsecret");
+            CLIENT_ID = prop.getProperty("github.clientid");
+            CLIENT_SECRET = prop.getProperty("github.clientsecret");
             System.out.println(prop.getProperty("github.clientsecret"));
 
         } catch (IOException ex) {
@@ -71,6 +69,7 @@ public class UploadedController {
 
         if (method.equals("POST")) {
             StringBuilder postData = new StringBuilder();
+
             for (Map.Entry<String,Object> param : params.entrySet()) {
                 if (postData.length() != 0) postData.append('&');
                 postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
@@ -105,6 +104,7 @@ public class UploadedController {
 
     @GetMapping("/callback0")
     public String home0(HttpServletRequest request) throws IOException {
+        myInit();
         String code = request.getParameter("code");
 
         String url = "https://github.com/login/oauth/access_token";
@@ -116,6 +116,7 @@ public class UploadedController {
         params.put("client_secret", CLIENT_SECRET);
 
         String token = myGitHubApiCall(params, url, "POST").split("&", 2)[0].split("=", 2)[1];
+
         Map<String,Object> params2 = new LinkedHashMap<>();
 
         String res = myGitHubApiCall(params2, "https://api.github.com/user?access_token=" + token, "GET" );
@@ -139,72 +140,5 @@ public class UploadedController {
         }
         return "uploadeds/uploadnew";
     }
-
-    /*
-    @GetMapping("/uploadeds")
-    public String index(Model model) {
-        List<Uploaded> uploadeds = uploadedService.findAll();
-        model.addAttribute("uploadeds", uploadeds);
-        return "uploadeds/index";
-    }
-
-    @GetMapping("/uploadeds/search")
-    public String search_and_see_screen(Model model) {
-      return "uploadeds/search_and_see";
-    }
-
-    @PostMapping("/uploadeds/search")
-    public String search(Model model, @RequestParam String query) {
-      List<Uploaded> uploadeds = uploadedRepository.findUploadedByName(query);
-      model.addAttribute("uploadeds", uploadeds);
-      return "uploadeds/search_and_see";
-    }
-
-    @GetMapping("/uploadeds/new")
-    public String newuploaded(Model model) {
-        return "uploadeds/new";
-    }
-
-    @GetMapping("/uploadeds/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) { 
-        Uploaded uploaded = uploadedService.findOne(id);
-        model.addAttribute("uploaded", uploaded);
-        return "uploadeds/edit";
-    }
-
-    @GetMapping("/uploadeds/{id}")
-    public String show(@PathVariable Long id, Model model) {
-        Uploaded uploaded = uploadedService.findOne(id);
-        model.addAttribute("uploaded", uploaded);
-        return "uploadeds/show";
-    }
-
-    @PostMapping("/uploadeds/new")
-    public String create(@ModelAttribute Uploaded uploaded) {
-        uploaded.setOwner(login);
-        uploadedService.save(uploaded);
-        return "redirect:/uploadeds";
-    }
-
-    @PostMapping("/uploadeds/{id}")
-    public String done(@PathVariable Long id) {
-        Uploaded uploaded = uploadedService.findOne(id);
-        uploaded.setDone();
-        uploadedService.save(uploaded);
-        return "redirect:/uploadeds";
-    }
-
-    @PutMapping("/uploadeds/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute Uploaded uploaded) {
-        uploaded.setId(id);
-        uploadedService.save(uploaded);
-        return "redirect:/uploadeds";
-    }
-
-    @DeleteMapping("/uploadeds/{id}")
-    public String destroy(@PathVariable Long id) {
-        uploadedService.delete(id);
-        return "redirect:/uploadeds";
-    }*/
 
 }
