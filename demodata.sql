@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `todo`
+-- Table structure for table `uploaded`
 --
 
-DROP TABLE IF EXISTS `todo`;
+DROP TABLE IF EXISTS `uploaded`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `todo` (
+CREATE TABLE `uploaded` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `deadline` varchar(255) DEFAULT NULL,
   `is_done` varchar(255) DEFAULT NULL,
@@ -32,13 +32,13 @@ CREATE TABLE `todo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `todo`
+-- Dumping data for table `uploaded`
 --
 
-LOCK TABLES `todo` WRITE;
-/*!40000 ALTER TABLE `todo` DISABLE KEYS */;
-INSERT INTO `todo` VALUES (16,'2019-08-09','No','レポートに図をたす'),(23,'2019-08-22','Yes','空港までの道のりを把握する'),(14,'2019-08-13','Yes','言語工学課題'),(21,'2019-08-10','No','荷造りをする');
-/*!40000 ALTER TABLE `todo` ENABLE KEYS */;
+LOCK TABLES `uploaded` WRITE;
+/*!40000 ALTER TABLE `uploaded` DISABLE KEYS */;
+INSERT INTO `uploaded` VALUES (16,'2019-08-09','No','レポートに図をたす'),(23,'2019-08-22','Yes','空港までの道のりを把握する'),(14,'2019-08-13','Yes','言語工学課題'),(21,'2019-08-10','No','荷造りをする');
+/*!40000 ALTER TABLE `uploaded` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

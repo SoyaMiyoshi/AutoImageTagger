@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <h1>新しいTodo</h1>
-    <form th:action="@{/todos/new}" th:method="post">
+    <form th:action="@{/uploadeds/new}" th:method="post">
         <div class="form-group">
             <label class="control-label">名前</label>
             <input class="form-control" type="text" name="name" />
@@ -23,7 +23,7 @@
         <button class="btn btn-default" type="submit">作成</button>
     </form>
     <div class="pull-right">
-        <a class="btn btn-link" href="/todos">一覧画面へ</a>
+        <a class="btn btn-link" href="/uploadeds">一覧画面へ</a>
     </div>
 </div>
 </body>

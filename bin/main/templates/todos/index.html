@@ -24,27 +24,27 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="todo:${todos}" th:object="${todo}">
+        <tr th:each="uploaded:${uploadeds}" th:object="${uploaded}">
             <td th:text="*{name}"></td>
             <td th:text="*{deadline}"></td>
             <td th:text="*{isDone}"></td>
 
-            <td><a class="btn btn-default btn-xs" th:href="@{/todos/{id}(id=*{id})}">参照</a></td>
-            <td><a class="btn btn-default btn-xs" th:href="@{/todos/{id}/edit(id=*{id})}">編集</a></td>
+            <td><a class="btn btn-default btn-xs" th:href="@{/uploadeds/{id}(id=*{id})}">参照</a></td>
+            <td><a class="btn btn-default btn-xs" th:href="@{/uploadeds/{id}/edit(id=*{id})}">編集</a></td>
             <td>
-                <form th:action="@{/todos/{id}(id=*{id})}" th:method="delete">
+                <form th:action="@{/uploadeds/{id}(id=*{id})}" th:method="delete">
                     <input class="btn btn-default btn-xs" type="submit" value="削除" />
                 </form>
             </td>
             <td>
-                <form th:action="@{/todos/{id}(id=*{id})}" th:method="post">
+                <form th:action="@{/uploadeds/{id}(id=*{id})}" th:method="post">
                     <input class="btn btn-default btn-xs" type="submit" value="完了した!" />
                 </form>
             </td>
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-default" href="/todos/new">新しいTodoを追加</a>
+    <a class="btn btn-default" href="/uploadeds/new">新しいTodoを追加</a>
 </div>
 </body>
 </html>
