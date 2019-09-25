@@ -1,4 +1,6 @@
 src/main/resources/tagger/venv/*
+src/main/resources/tagger/venv
+src/main/resources/tagger/venv/
 HELP.md
 .gradle
 build/
