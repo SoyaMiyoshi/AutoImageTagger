@@ -106,6 +106,13 @@ public class UploadedController {
         return "/uploadeds/view_mine";
     }
 
+    @GetMapping("/view_all")
+    public String home1(Model model) {
+        List<Uploaded> uploadeds = uploadedService.findAll();
+        model.addAttribute("uploadeds", uploadeds);
+        return "/uploadeds/view_all";
+    }
+
     @GetMapping("/uploadnew")
     public String newUpload() {
         return "/uploadeds/uploadnew";
