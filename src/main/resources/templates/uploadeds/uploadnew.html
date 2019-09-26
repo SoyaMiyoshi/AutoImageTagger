@@ -12,6 +12,7 @@
     <h1>新しい画像をアップロード</h1>
     <form th:action="@{/uploadnew}" th:method="post" enctype="multipart/form-data">
         File : <input type="file" name="file" required/>
+        caption : <input type="text" name="caption" value="何か書いてね" required/>
         <input type="submit" value="uploadnew" />
     </form>
 </div>

@@ -136,16 +136,18 @@ public class UploadedController {
     }
 
     @PostMapping("/uploadnew")
-    public String handleFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    public String handleFormUpload(@RequestParam("file") MultipartFile file, @RequestParam("caption") String caption) throws IOException {
 
         if (!file.isEmpty() && login != null && !login.isEmpty()) {
             Uploaded uploaded = new Uploaded();
             uploaded.setOwner(login);
+            uploaded.setCaption(caption);
             uploadedService.save(uploaded);
             BufferedImage src = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
             File destination = new File( STORAGE_PATH + uploaded.getId().toString() + ".jpg");
             ImageIO.write(src, "jpg", destination);
             myAutoTaggerCall(uploaded.getId().toString());
+
         }
 
         return "redirect:/view_mine";

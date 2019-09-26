@@ -12,6 +12,7 @@ public class Uploaded {
     private Long id;
     public String owner;
     public String tag;
+    public String caption;
 
     public Long getId() {
         return id;
@@ -33,7 +34,9 @@ public class Uploaded {
     public void setTag(String owner) {
         this.tag = tag;
     }
-    
+
+    public String getCaption() { return caption; }
+    public void setCaption(String caption) { this.caption = caption; }
     /*
     @Override
     public String toString() {
