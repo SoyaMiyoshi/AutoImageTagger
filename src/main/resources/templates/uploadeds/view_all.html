@@ -18,10 +18,11 @@
         <tbody>
     </table>
 
-    <div  th:each="uploaded:${uploadeds}" th:object="${uploaded}">
+    <div style="border:1px solid gray; padding:5px;" th:each="uploaded:${uploadeds}" th:object="${uploaded}">
         <img th:attr="src=@{|http://localhost:8001/${uploaded.getId()}.jpg|}" th:width="80" th:height="80"/>
         <div class="text" th:text="${uploaded.owner}"></div>
         <div class="text" th:text="${uploaded.tag}"></div>
+        <div class="text" th:text="${uploaded.caption}"></div>
     </div>
 
     <div class="pull-right">
