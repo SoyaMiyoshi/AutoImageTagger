@@ -48,14 +48,9 @@ public class UploadedController {
         try {
             InputStream input = new FileInputStream("src/main/resources/application.properties");
             Properties prop = new Properties();
-
-            // load a properties file
             prop.load(input);
-
-            // get the property value and print it out
             CLIENT_ID = prop.getProperty("github.clientid");
             CLIENT_SECRET = prop.getProperty("github.clientsecret");
-            System.out.println(prop.getProperty("github.clientsecret"));
 
         } catch (IOException ex) {
             System.out.println("Could n toread prperties file!");
@@ -96,43 +91,40 @@ public class UploadedController {
         Runtime.getRuntime().exec(virtual_python + " " + python_ex + " " + image_id + " &");
     }
 
-//    @GetMapping("/")
-//    public RedirectView home() {
-//        myInit();
-//        RedirectView redirectView = new RedirectView();
-//        redirectView.setUrl("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
-//        return redirectView;
-//    }
-
     @GetMapping("/")
-    public String home(Model model) {
-        List<Uploaded> uploadeds = uploadedService.findAll();
+    public RedirectView home() {
+        myInit();
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
+        return redirectView;
+    }
 
+    @GetMapping("/view_mine")
+    public String home(Model model) {
+        List<Uploaded> uploadeds = uploadedService.finduploadeds(login);
         model.addAttribute("uploadeds", uploadeds);
-        return "/uploadeds/search_and_see";
+        return "/uploadeds/view_mine";
+    }
+
+    @GetMapping("/uploadnew")
+    public String newUpload() {
+        return "/uploadeds/uploadnew";
     }
 
     @GetMapping("/callback0")
     public String home0(HttpServletRequest request) throws IOException {
         myInit();
         String code = request.getParameter("code");
-
         String url = "https://github.com/login/oauth/access_token";
-
         Map<String,Object> params = new LinkedHashMap<>();
-
         params.put("code", code);
         params.put("client_id", CLIENT_ID);
         params.put("client_secret", CLIENT_SECRET);
-
         String token = myGitHubApiCall(params, url, "POST").split("&", 2)[0].split("=", 2)[1];
-
         Map<String,Object> params2 = new LinkedHashMap<>();
-
         String res = myGitHubApiCall(params2, "https://api.github.com/user?access_token=" + token, "GET" );
         login = res.split(",", 2)[0].split(":", 2)[1].replace("\"", "");
         System.out.println(login);
-
         return "/uploadeds/uploadnew";
     }
 
@@ -148,7 +140,8 @@ public class UploadedController {
             ImageIO.write(src, "jpg", destination);
             myAutoTaggerCall(uploaded.getId().toString());
         }
-        return "uploadeds/uploadnew";
+
+        return "redirect:/view_mine";
     }
 
 }

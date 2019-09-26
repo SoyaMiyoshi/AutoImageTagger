@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface UploadedRepository extends JpaRepository<Uploaded, Long> {
 
-    List<Uploaded> findUploadedByOwner(String owner);
+    List<Uploaded> findAllByOwnerLike(String owner);
 
 }

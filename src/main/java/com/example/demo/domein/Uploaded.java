@@ -11,6 +11,7 @@ public class Uploaded {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     public String owner;
+    public String tag;
 
     public Long getId() {
         return id;
@@ -26,6 +27,13 @@ public class Uploaded {
         this.owner = owner;
     }
 
+    public String getTag() {
+        return tag;
+    }
+    public void setTag(String owner) {
+        this.tag = tag;
+    }
+    
     /*
     @Override
     public String toString() {
