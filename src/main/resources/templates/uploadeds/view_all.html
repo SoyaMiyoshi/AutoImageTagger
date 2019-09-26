@@ -11,7 +11,7 @@
 
 
 <div class="container">
-    <h1>あなたの写真</h1>
+    <h1>みんなの写真</h1>
     <table class="table" id="parent">
         <thead>
         </thead>
@@ -22,9 +22,10 @@
         <img th:attr="src=@{|http://localhost:8001/${uploaded.getId()}.jpg|}" th:width="80" th:height="80"/>
         <div class="text" th:text="${uploaded.owner}"></div>
         <div class="text" th:text="${uploaded.tag}"></div>
-     </div>
+    </div>
+
     <div class="pull-right">
-        <a class="btn btn-link" href="/view_all">みんなの写真</a>
+        <a class="btn btn-link" href="/view_mine">あなたの写真</a>
     </div>
 
 </div>
