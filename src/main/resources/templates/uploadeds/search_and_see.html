@@ -2,50 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
-    <title>写真リスト</title>
+    <title>写真</title>
     <link rel="stylesheet" href="/css/bootstrap.css" />
     <script src="/js/jquery.js"></script>
     <script src="/js/bootstrap.js"></script>
 </head>
-
 <body>
 
-<!--<div class="container">-->
-<h1>My First Web Page</h1>
-<p>My First Paragraph</p>
 
-<p id="demo"></p>
+<div class="container">
+    <h1>検索結果</h1>
+    <table class="table" id="parent">
+        <thead>
+        </thead>
+        <tbody>
+    </table>
+    
+    <div  th:each="uploaded:${uploadeds}" th:object="${uploaded}">
+        <img th:attr="src=@{|http://localhost:8001/${uploaded.getId()}.jpg|}" th:width="80" th:height="80"/>
+        <div class="text" th:text="${uploaded.owner}"></div>
+    </div>
 
-<script>
-    //document.getElementById("demo").innerHTML = 5 + 6;
-    console.log('${uploadeds}');
-    var data = eval('('+'${uploadeds}'+')');
-    document.getElementById("demo").innerHTML = data;
-</script>
-
-
-    <!--        <tbody>-->
-<!--        <p id="demo"></p>-->
-<!--        <script type="text/javascript">-->
-<!--            var data = eval('('+'${uploadeds}'+')');-->
-<!--            document.getElementById("demo").innerHTML = data;-->
-
-
-<!--            /*-->
-<!--            for(var i=0; i<elements.length; i++) {-->
-<!--                var mysrc = "http://localhost:8001/" + elements[i].innerText + ".jpg";-->
-<!--                var content = '<img src="' + mysrc + '" width="104" height="91" />'-->
-<!--                document.write(content);-->
-<!--            }-->
-<!--            */-->
-
-<!--            /*-->
-<!--            var img = document.getElementById("image_place");-->
-<!--            var imageId = document.getElementById("image_id").innerText;-->
-<!--            img.src = "/Users/sou/IdeaProjects/mytodoapp/src/main/resources/saved/" + imageId + ".jpg";-->
-<!--            */-->
-<!--        </script>-->
-<!--        </tbody>-->
-<!--</div>-->
-<!--</body>-->
+</div>
+</body>
 </html>
